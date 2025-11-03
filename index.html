@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookSwap - Second-Hand Book Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .filters {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 8px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 12px 30px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .book-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .book-card.sold {
+            opacity: 0.6;
+        }
+
+        .book-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        .book-content {
+            padding: 20px;
+        }
+
+        .book-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .book-author {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .book-genre {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        .book-condition {
+            color: #48bb78;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .book-price {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .book-seller {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-small {
+            padding: 8px 15px;
+            font-size: 0.85em;
+            flex: 1;
+        }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .favorite-btn.favorited {
+            color: #e53e3e;
+        }
+
+        .sold-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #e53e3e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn-cancel:hover {
+            background: #d0d0d0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .empty-state h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>📚 BookSwap</h1>
+                    <p class="tagline">Reducing waste, one book at a time</p>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Search books, authors, or genres...">
+                    <button class="btn btn-primary" onclick="searchBooks()">Search</button>
+                </div>
+                <button class="btn btn-secondary" onclick="openListBookModal()">+ List a Book</button>
+            </div>
+        </header>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Genre:</label>
+                <select id="genreFilter" onchange="filterBooks()">
+                    <option value="">All Genres</option>
+                    <option value="Fiction">Fiction</option>
+                    <option value="Non-Fiction">Non-Fiction</option>
+                    <option value="Mystery">Mystery</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Sci-Fi">Sci-Fi</option>
+                    <option value="Fantasy">Fantasy</option>
+                    <option value="Biography">Biography</option>
+                    <option value="History">History</option>
+                    <option value="Self-Help">Self-Help</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Condition:</label>
+                <select id="conditionFilter" onchange="filterBooks()">
+                    <option value="">All Conditions</option>
+                    <option value="Like New">Like New</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Max Price:</label>
+                <input type="number" id="priceFilter" placeholder="NPR" style="width: 100px;" onchange="filterBooks()">
+            </div>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab active" onclick="switchTab('all')">All Books</button>
+            <button class="tab" onclick="switchTab('favorites')">❤️ My Favorites</button>
+        </div>
+
+        <div id="allBooksView" class="books-grid"></div>
+        <div id="favoritesView" class="books-grid" style="display: none;"></div>
+    </div>
+
+    <!-- List Book Modal -->
+    <div id="listBookModal" class="modal">
+        <div class="modal-content">
+            <h2>List Your Book</h2>
+            <form id="listBookForm" onsubmit="listBook(event)">
+                <div class="form-group">
+                    <label>Book Title *</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Author *</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Genre *</label>
+                    <select required>
+                        <option value="">Select Genre</option>
+                        <option value="Fiction">Fiction</option>
+                        <option value="Non-Fiction">Non-Fiction</option>
+                        <option value="Mystery">Mystery</option>
+                        <option value="Romance">Romance</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Biography">Biography</option>
+                        <option value="History">History</option>
+                        <option value="Self-Help">Self-Help</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Condition *</label>
+                    <select required>
+                        <option value="">Select Condition</option>
+                        <option value="Like New">Like New</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Price (NPR) *</label>
+                    <input type="number" required min="0">
+                </div>
+                <div class="form-group">
+                    <label>Your Name *</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Contact (Phone/Email) *</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Additional Notes</label>
+                    <textarea placeholder="Any additional information about the book..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-cancel" style="flex: 1;" onclick="closeListBookModal()">Cancel</button>
+                    <button type="submit" class="btn btn-secondary" style="flex: 1;">List Book</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Seller Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <h2>Contact Seller</h2>
+            <div id="contactInfo"></div>
+            <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="closeContactModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let books = [
+            {id: 1, title: "To Kill a Mockingbird", author: "Harper Lee", genre: "Fiction", condition: "Good", price: 350, seller: "Rajesh Kumar", contact: "9841234567", sold: false},
+            {id: 2, title: "1984", author: "George Orwell", genre: "Fiction", condition: "Like New", price: 450, seller: "Priya Sharma", contact: "priya@email.com", sold: false},
+            {id: 3, title: "The Alchemist", author: "Paulo Coelho", genre: "Fiction", condition: "Fair", price: 250, seller: "Amit Thapa", contact: "9812345678", sold: false},
+            {id: 4, title: "Sapiens", author: "Yuval Noah Harari", genre: "Non-Fiction", condition: "Good", price: 550, seller: "Sunita Rai", contact: "sunita@email.com", sold: false},
+            {id: 5, title: "The Girl on the Train", author: "Paula Hawkins", genre: "Mystery", condition: "Like New", price: 400, seller: "Kiran Shrestha", contact: "9823456789", sold: false},
+            {id: 6, title: "Pride and Prejudice", author: "Jane Austen", genre: "Romance", condition: "Good", price: 300, seller: "Binita Gurung", contact: "binita@email.com", sold: true},
+            {id: 7, title: "Dune", author: "Frank Herbert", genre: "Sci-Fi", condition: "Fair", price: 380, seller: "Deepak Magar", contact: "9834567890", sold: false},
+            {id: 8, title: "Educated", author: "Tara Westover", genre: "Biography", condition: "Like New", price: 500, seller: "Anita Tamang", contact: "anita@email.com", sold: false},
+        ];
+
+        let favorites = [];
+        let currentTab = 'all';
+        let filteredBooks = [...books];
+
+        function renderBooks() {
+            const container = currentTab === 'all' ? document.getElementById('allBooksView') : document.getElementById('favoritesView');
+            const booksToShow = currentTab === 'all' ? filteredBooks : books.filter(b => favorites.includes(b.id));
+
+            if (booksToShow.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1 / -1;">
+                        <h3>${currentTab === 'all' ? 'No books found' : 'No favorites yet'}</h3>
+                        <p>${currentTab === 'all' ? 'Try adjusting your filters or search' : 'Start adding books to your favorites!'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = booksToShow.map(book => `
+                <div class="book-card ${book.sold ? 'sold' : ''}">
+                    ${book.sold ? '<div class="sold-badge">SOLD</div>' : ''}
+                    <button class="favorite-btn ${favorites.includes(book.id) ? 'favorited' : ''}" onclick="toggleFavorite(${book.id})">
+                        ${favorites.includes(book.id) ? '❤️' : '🤍'}
+                    </button>
+                    <div class="book-image">${book.title.charAt(0)}</div>
+                    <div class="book-content">
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-author">by ${book.author}</div>
+                        <span class="book-genre">${book.genre}</span>
+                        <div class="book-condition">Condition: ${book.condition}</div>
+                        <div class="book-price">NPR ${book.price}</div>
+                        <div class="book-seller">Seller: ${book.seller}</div>
+                        <div class="book-actions">
+                            <button class="btn btn-primary btn-small" onclick="contactSeller(${book.id})" ${book.sold ? 'disabled' : ''}>
+                                Contact
+                            </button>
+                            ${!book.sold ? `<button class="btn btn-secondary btn-small" onclick="markAsSold(${book.id})">Mark Sold</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFavorite(id) {
+            if (favorites.includes(id)) {
+                favorites = favorites.filter(fav => fav !== id);
+            } else {
+                favorites.push(id);
+            }
+            renderBooks();
+        }
+
+        function markAsSold(id) {
+            const book = books.find(b => b.id === id);
+            if (book && confirm(`Mark "${book.title}" as sold?`)) {
+                book.sold = true;
+                filterBooks();
+            }
+        }
+
+        function contactSeller(id) {
+            const book = books.find(b => b.id === id);
+            if (book) {
+                document.getElementById('contactInfo').innerHTML = `
+                    <div style="padding: 20px; background: #f7fafc; border-radius: 10px;">
+                        <p style="margin-bottom: 15px;"><strong>Book:</strong> ${book.title}</p>
+                        <p style="margin-bottom: 15px;"><strong>Seller:</strong> ${book.seller}</p>
+                        <p style="margin-bottom: 15px;"><strong>Contact:</strong> ${book.contact}</p>
+                        <p style="color: #666; font-size: 0.9em;">Reach out directly to arrange pickup or delivery!</p>
+                    </div>
+                `;
+                document.getElementById('contactModal').classList.add('active');
+            }
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').classList.remove('active');
+        }
+
+        function openListBookModal() {
+            document.getElementById('listBookModal').classList.add('active');
+        }
+
+        function closeListBookModal() {
+            document.getElementById('listBookModal').classList.remove('active');
+            document.getElementById('listBookForm').reset();
+        }
+
+        function listBook(event) {
+            event.preventDefault();
+            const form = event.target;
+            const newBook = {
+                id: books.length + 1,
+                title: form.elements[0].value,
+                author: form.elements[1].value,
+                genre: form.elements[2].value,
+                condition: form.elements[3].value,
+                price: parseInt(form.elements[4].value),
+                seller: form.elements[5].value,
+                contact: form.elements[6].value,
+                sold: false
+            };
+            books.push(newBook);
+            closeListBookModal();
+            filterBooks();
+            alert('Book listed successfully!');
+        }
+
+        function searchBooks() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            filteredBooks = books.filter(book => 
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query) ||
+                book.genre.toLowerCase().includes(query)
+            );
+            renderBooks();
+        }
+
+        function filterBooks() {
+            const genre = document.getElementById('genreFilter').value;
+            const condition = document.getElementById('conditionFilter').value;
+            const maxPrice = document.getElementById('priceFilter').value;
+
+            filteredBooks = books.filter(book => {
+                if (genre && book.genre !== genre) return false;
+                if (condition && book.condition !== condition) return false;
+                if (maxPrice && book.price > parseInt(maxPrice)) return false;
+                return true;
+            });
+
+            renderBooks();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('allBooksView').style.display = tab === 'all' ? 'grid' : 'none';
+            document.getElementById('favoritesView').style.display = tab === 'favorites' ? 'grid' : 'none';
+            
+            renderBooks();
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') searchBooks();
+        });
+
+        // Initial render
+        renderBooks();
+    </script>
+</body>
+</html>
